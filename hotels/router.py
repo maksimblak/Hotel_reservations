@@ -2,7 +2,7 @@ from datetime import date, datetime, timedelta
 from typing import List, Optional
 
 from fastapi import APIRouter, Query
-#from fastapi_cache.decorator import cache
+from fastapi_cache.decorator import cache
 
 from exceptions import CannotBookHotelForLongPeriod, DateFromCannotBeAfterDateTo
 from hotels.dao import HotelDAO
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/hotels", tags=["Отели"])
 
 
 @router.get("/{location}")
-#@cache(expire=30)
+@cache(expire=30)
 async def get_hotels_by_location_and_time(
     location: str,
     date_from: date = Query(..., description=f"Например, {datetime.now().date()}"),
