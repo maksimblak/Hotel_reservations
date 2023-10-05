@@ -15,7 +15,8 @@ class SBooking(BaseModel):
     total_days: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
 
 class SBookingInfo(SBooking):
     image_id: int
@@ -24,7 +25,7 @@ class SBookingInfo(SBooking):
     services: list[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class SNewBooking(BaseModel):
