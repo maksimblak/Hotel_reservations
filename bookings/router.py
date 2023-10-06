@@ -19,9 +19,9 @@ async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBooking
 
 @router.post("", status_code=201)
 async def add_booking(
-        booking: SNewBooking,
-        background_tasks: BackgroundTasks,
-        user: Users = Depends(get_current_user),
+    booking: SNewBooking,
+    background_tasks: BackgroundTasks,
+    user: Users = Depends(get_current_user),
 ):
     booking = await BookingDAO.add(
         user.id,
@@ -41,7 +41,7 @@ async def add_booking(
 
 @router.get("/{booking_id}")
 async def remove_booking(
-        booking_id: int,
-        current_user: Users = Depends(get_current_user),
+    booking_id: int,
+    current_user: Users = Depends(get_current_user),
 ):
     await BookingDAO.delete(id=booking_id, user_id=current_user.id)

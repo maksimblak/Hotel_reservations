@@ -1,15 +1,8 @@
 import time
-from fastapi import FastAPI, Request
-from admin.views import UsersAdmin, HotelsAdmin, RoomsAdmin, BookingsAdmin
-from bookings.router import router as router_bookings
-from config import settings
-from database import engine
-from logger import logger
+
 import sentry_sdk
-from pages.router import router as router_pages
-from users.router import router_auth, router_users
-from hotels.router import router as router_hotels
-from upload_images.router import router as router_upload_images
+import uvicorn
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
@@ -18,8 +11,17 @@ from fastapi_versioning import VersionedFastAPI
 # from prometheus_fastapi_instrumentator import Instrumentator
 from redis import asyncio as aioredis
 from sqladmin import Admin
+
 from admin.auth import authentication_backend
-import uvicorn
+from admin.views import BookingsAdmin, HotelsAdmin, RoomsAdmin, UsersAdmin
+from bookings.router import router as router_bookings
+from config import settings
+from database import engine
+from hotels.router import router as router_hotels
+from logger import logger
+from pages.router import router as router_pages
+from upload_images.router import router as router_upload_images
+from users.router import router_auth, router_users
 
 sentry_sdk.init(
     dsn="https://3ee5fa27194a2fc50569bb9970a18ea3@o4506003606339584.ingest.sentry.io/4506003610992640",
@@ -37,7 +39,6 @@ app.include_router(router_pages)
 app.include_router(router_upload_images)
 
 
-
 # Подключение CORS, чтобы запросы к API могли приходить из браузера
 # 3000 - порт, на котором работает фронтенд на React.js
 origins = ["http://localhost:3000"]
@@ -47,12 +48,17 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
-    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers",
-                   "Access-Control-Allow-Origin", "Authorization"],
+    allow_headers=[
+        "Content-Type",
+        "Set-Cookie",
+        "Access-Control-Allow-Headers",
+        "Access-Control-Allow-Origin",
+        "Authorization",
+    ],
 )
 
 # Подключение версионирования
-app = VersionedFastAPI(app, version_format='{major}', prefix_format='/api/v{major}')
+app = VersionedFastAPI(app, version_format="{major}", prefix_format="/api/v{major}")
 
 # Подключение админки
 admin = Admin(app, engine, authentication_backend=authentication_backend)
@@ -67,7 +73,10 @@ app.mount("/static", StaticFiles(directory="static"), "static")
 @app.on_event("startup")
 def startup():
     redis = aioredis.from_url(
-        f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}", encoding="utf8", decode_responses=True)
+        f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
+        encoding="utf8",
+        decode_responses=True,
+    )
     FastAPICache.init(RedisBackend(redis), prefix="cache")
 
 

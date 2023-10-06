@@ -16,7 +16,9 @@ router = APIRouter(prefix="/hotels", tags=["Отели"])
 async def get_hotels_by_location_and_time(
     location: str,
     date_from: date = Query(..., description=f"Например, {datetime.now().date()}"),
-    date_to: date = Query(..., description=f"Например, {(datetime.now() + timedelta(days=14)).date()}"),
+    date_to: date = Query(
+        ..., description=f"Например, {(datetime.now() + timedelta(days=14)).date()}"
+    ),
 ) -> List[SHotelInfo]:
     if date_from > date_to:
         raise DateFromCannotBeAfterDateTo

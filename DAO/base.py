@@ -1,9 +1,9 @@
-from database import async_session_maker
 from sqlalchemy import delete, insert, select
-from models import Bookings
+from sqlalchemy.exc import SQLAlchemyError
+
 # from logger import logger
 from database import async_session_maker
-from sqlalchemy.exc import SQLAlchemyError
+from models import Bookings
 
 
 class BaseDAO:

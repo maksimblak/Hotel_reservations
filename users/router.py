@@ -1,13 +1,10 @@
 from fastapi import APIRouter, Depends, Response
 
-from exceptions import (
-    CannotAddDataToDatabase,
-    UserAlreadyExistsException,
-)
+from exceptions import CannotAddDataToDatabase, UserAlreadyExistsException
+from models import Users
 from users.auth import authenticate_user, create_access_token, get_password_hash
 from users.dao import UserDAO
 from users.dependencies import get_current_user
-from models import Users
 from users.schemas import SUserAuth
 
 router_auth = APIRouter(prefix="/auth", tags=["Аутентификация"])

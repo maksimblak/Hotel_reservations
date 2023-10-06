@@ -1,7 +1,9 @@
 from datetime import date, datetime, timedelta
+
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+
 from bookings.router import add_booking, get_bookings
 from hotels.rooms.router import get_rooms_by_time
 from hotels.router import get_hotel_by_id, get_hotels_by_location_and_time

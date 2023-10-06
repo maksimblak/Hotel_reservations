@@ -28,11 +28,11 @@ class BookingDAO(BaseDAO):
 
     @classmethod
     async def add(
-            cls,
-            user_id: int,
-            room_id: int,
-            date_from: date,
-            date_to: date,
+        cls,
+        user_id: int,
+        room_id: int,
+        date_from: date,
+        date_to: date,
     ):
         try:
             async with async_session_maker() as session:
@@ -70,12 +70,18 @@ class BookingDAO(BaseDAO):
                         )
                     )
                     .select_from(Rooms)
-                    .join(booked_rooms, booked_rooms.c.room_id == Rooms.id, isouter=True)
+                    .join(
+                        booked_rooms, booked_rooms.c.room_id == Rooms.id, isouter=True
+                    )
                     .where(Rooms.id == room_id)
                     .group_by(Rooms.quantity, booked_rooms.c.room_id)
                 )
 
-                logger.debug(get_rooms_left.compile(engine, compile_kwargs={"literal_binds": True}))
+                logger.debug(
+                    get_rooms_left.compile(
+                        engine, compile_kwargs={"literal_binds": True}
+                    )
+                )
 
                 rooms_left = await session.execute(get_rooms_left)
                 rooms_left: int = rooms_left.scalar()
