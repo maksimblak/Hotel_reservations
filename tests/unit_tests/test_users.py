@@ -13,6 +13,6 @@ async def test_find_user_by_id(email, is_present):
 
     if is_present:
         assert user
-        assert user["email"] == email
+        assert user.email == email
     else:
         assert not user

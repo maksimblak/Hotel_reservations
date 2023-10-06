@@ -22,7 +22,7 @@ async def prepare_database():
         await conn.run_sync(Base.metadata.create_all)
 
     def open_mock_json(model: str):
-        with open(f"app/tests/mock_{model}.json", encoding="utf-8") as file:
+        with open(f"tests/mock_{model}.json", encoding="utf-8") as file:
             return json.load(file)
 
     hotels = open_mock_json("hotels")
@@ -52,7 +52,7 @@ async def prepare_database():
 # Создаем новый event loop для прогона тестов
 @pytest.fixture(scope="session")
 def event_loop(request):
-    """Create an instance of the default event loop for each test case."""
+
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
@@ -60,14 +60,14 @@ def event_loop(request):
 
 @pytest.fixture(scope="function")
 async def ac():
-    "Асинхронный клиент для тестирования эндпоинтов"
+    """Асинхронный клиент для тестирования эндпоинтов"""
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
         yield ac
 
 
 @pytest.fixture(scope="session")
 async def authenticated_ac():
-    "Асинхронный аутентифицированный клиент для тестирования эндпоинтов"
+    """Асинхронный аутентифицированный клиент для тестирования эндпоинтов"""
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
         await ac.post("/api/v1/auth/login", json={
             "email": "test@test.com",
@@ -75,4 +75,3 @@ async def authenticated_ac():
         })
         assert ac.cookies["booking_access_token"]
         yield ac
-

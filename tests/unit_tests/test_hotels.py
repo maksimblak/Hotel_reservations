@@ -13,6 +13,6 @@ async def test_find_user_by_id(hotel_id, is_present):
 
     if is_present:
         assert hotel
-        assert hotel["id"] == hotel_id
+        assert hotel.id == hotel_id
     else:
         assert not hotel
