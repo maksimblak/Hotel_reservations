@@ -59,6 +59,6 @@ class RoomDAO(BaseDAO):
             )
         )
         async with async_session_maker() as session:
-            # logger.debug(get_rooms.compile(engine, compile_kwargs={"literal_binds": True}))
+            logger.debug(get_rooms.compile(engine, compile_kwargs={"literal_binds": True}))
             rooms = await session.execute(get_rooms)
             return rooms.mappings().all()

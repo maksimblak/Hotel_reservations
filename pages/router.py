@@ -7,10 +7,7 @@ from hotels.rooms.router import get_rooms_by_time
 from hotels.router import get_hotel_by_id, get_hotels_by_location_and_time
 from utils import format_number_thousand_separator, get_month_days
 
-router = APIRouter(
-    prefix="/pages",
-    tags=["Фронтенд"]
-)
+router = APIRouter(prefix="/pages", tags=["Фронтенд"])
 
 templates = Jinja2Templates(directory="templates")
 

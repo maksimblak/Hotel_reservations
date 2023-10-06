@@ -1,13 +1,11 @@
-from database import async_session_maker
+from database import async_session_maker, engine
 from datetime import date
 from models import Bookings, Rooms
 from DAO.base import BaseDAO
 from sqlalchemy import and_, func, insert, or_, select
 from sqlalchemy.exc import SQLAlchemyError
 from exceptions import RoomFullyBooked
-
-
-# from logger import logger
+from logger import logger
 
 
 class BookingDAO(BaseDAO):
@@ -77,12 +75,12 @@ class BookingDAO(BaseDAO):
                     .group_by(Rooms.quantity, booked_rooms.c.room_id)
                 )
 
-                # logger.debug(get_rooms_left.compile(engine, compile_kwargs={"literal_binds": True}))
+                logger.debug(get_rooms_left.compile(engine, compile_kwargs={"literal_binds": True}))
 
                 rooms_left = await session.execute(get_rooms_left)
                 rooms_left: int = rooms_left.scalar()
 
-                # logger.debug(f"{rooms_left=}")
+                logger.debug(f"{rooms_left=}")
 
                 if rooms_left > 0:
                     get_price = select(Rooms.price).filter_by(id=room_id)
@@ -124,4 +122,4 @@ class BookingDAO(BaseDAO):
                 "date_from": date_from,
                 "date_to": date_to,
             }
-            # logger.error(msg, extra=extra, exc_info=True)
+            logger.error(msg, extra=extra, exc_info=True)

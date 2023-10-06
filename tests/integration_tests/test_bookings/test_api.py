@@ -38,9 +38,7 @@ async def test_get_and_delete_booking(authenticated_ac: AsyncClient):
     response = await authenticated_ac.get("/api/v1/bookings")
     existing_bookings = [booking["id"] for booking in response.json()]
     for booking_id in existing_bookings:
-        response = await authenticated_ac.delete(
-            f"/api/v1/bookings/{booking_id}",
-        )
+        response = await authenticated_ac.delete(f"/api/v1/bookings/{booking_id}")
 
     response = await authenticated_ac.get("/api/v1/bookings")
     assert len(response.json()) == 0

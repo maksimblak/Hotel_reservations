@@ -1,8 +1,6 @@
 import logging
 from datetime import datetime
-
 from pythonjsonlogger import jsonlogger
-
 from config import settings
 
 logger = logging.getLogger()
@@ -27,5 +25,5 @@ formatter = CustomJsonFormatter(
 )
 
 logHandler.setFormatter(formatter)
-#logger.addHandler(logHandler)
-#logger.setLevel(settings.LOG_LEVEL)
+logger.addHandler(logHandler)
+logger.setLevel(settings.LOG_LEVEL)

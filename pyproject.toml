@@ -1,0 +1,11 @@
+[project]
+requires-python = ">=3.10"
+
+[tool.ruff]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+select = ["E", "F" , "UP", "D"]
+
+# Same as Black.
+line-length = 88
+show-fixes = true
+src= ["src"]
