@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_versioning import VersionedFastAPI
-# from prometheus_fastapi_instrumentator import Instrumentator
+from prometheus_fastapi_instrumentator import Instrumentator
 from redis import asyncio as aioredis
 from sqladmin import Admin
 
@@ -28,6 +28,7 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
     profiles_sample_rate=1.0,
 )
+
 
 app = FastAPI(title="Бронирование Отелей", version="1.0", root_path="/api")
 
@@ -57,6 +58,8 @@ app.add_middleware(
     ],
 )
 
+
+
 # Подключение версионирования
 app = VersionedFastAPI(app, version_format="{major}", prefix_format="/api/v{major}")
 
@@ -69,6 +72,9 @@ admin.add_view(BookingsAdmin)
 
 app.mount("/static", StaticFiles(directory="static"), "static")
 
+# Подключение эндпоинта для отображения метрик для их дальнейшего сбора Прометеусом
+instrumentator = Instrumentator(should_group_status_codes=False, excluded_handlers=[".*admin.*", "/metrics"])
+instrumentator.instrument(app).expose(app)
 
 @app.on_event("startup")
 def startup():
@@ -90,5 +96,5 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="localhost", port=8000)
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="localhost", port=8000)
