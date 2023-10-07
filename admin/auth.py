@@ -10,6 +10,7 @@ from users.dependencies import get_current_user
 
 
 class AdminAuth(AuthenticationBackend):
+    # Аутентификация пользователя при входе в админку
     async def login(self, request: Request) -> bool:
         form = await request.form()
         email, password = form["username"], form["password"]
@@ -21,10 +22,13 @@ class AdminAuth(AuthenticationBackend):
 
         return True
 
+    # Выход пользователя из админки и очистка сессии.
     async def logout(self, request: Request) -> bool:
         request.session.clear()
         return True
 
+    # Проверка аутентификации пользователя перед доступом к админке.
+    # Если пользователь не аутентифицирован, он перенаправляется на страницу входа.
     async def authenticate(self, request: Request) -> Optional[RedirectResponse]:
         token = request.session.get("token")
 

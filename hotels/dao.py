@@ -8,6 +8,7 @@ from logger import logger
 from models import Bookings, Hotels, Rooms
 
 
+# Класс DAO для работы с отелями
 class HotelDAO(BaseDAO):
     model = Hotels
 
@@ -65,16 +66,7 @@ class HotelDAO(BaseDAO):
         )
 
         get_hotels_with_rooms = (
-            # Код ниже можно было бы расписать так:
-            # select(
-            #     Hotels
-            #     booked_hotels.c.rooms_left,
-            # )
-            # Но используется конструкция Hotels.__table__.columns. Почему? Таким образом алхимия отдает
-            # все столбцы по одному, как отдельный атрибут. Если передать всю модель Hotels и
-            # один дополнительный столбец rooms_left, то будет проблематично для Pydantic распарсить
-            # такую структуру данных. То есть проблема кроется именно в парсинге ответа алхимии
-            # Пайдентиком.
+
             select(
                 Hotels.__table__.columns,
                 booked_hotels.c.rooms_left,

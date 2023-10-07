@@ -11,6 +11,7 @@ from exceptions import (
 from users.dao import UserDAO
 
 
+# Функция для извлечения токена из куки запроса
 def get_token(request: Request):
     token = request.cookies.get("booking_access_token")
     if not token:
@@ -18,6 +19,7 @@ def get_token(request: Request):
     return token
 
 
+# Функция для получения текущего пользователя на основе токена доступа
 async def get_current_user(token: str = Depends(get_token)):
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)

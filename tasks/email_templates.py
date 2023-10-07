@@ -3,6 +3,7 @@ from pydantic import EmailStr
 from config import settings
 
 
+# Функция для создания шаблона подтверждения бронирования
 def create_booking_confirmation_template(
         booking: dict,
         email_to: EmailStr,

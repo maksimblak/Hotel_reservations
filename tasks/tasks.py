@@ -11,6 +11,8 @@ from logger import logger
 
 # celery -A tasks.celery:celery worker --loglevel=INFO --pool=solo
 # celery -A tasks.celery:celery flower
+
+# Функция для обработки изображения
 @celery.task
 def process_pic(path: str):
     im_path = Path(path)
@@ -23,10 +25,11 @@ def process_pic(path: str):
         resized_img.save(f"static/images/resized_{width}_{height}_{im_path.name}")
 
 
+# Функция для отправки email подтверждения бронирования
 @celery.task
 def send_booking_confirmation_email(booking: dict, email_to: EmailStr):
-    # Удалите строчку ниже для отправки сообщения на свой email, а на пользовательский
-    #email_to = settings.SMTP_USER
+    # Удалить строчку ниже для отправки сообщения на свой email, а не на пользовательский
+    # email_to = settings.SMTP_USER
     msg_content = create_booking_confirmation_template(booking, email_to)
 
     with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT) as server:

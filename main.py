@@ -23,22 +23,20 @@ from pages.router import router as router_pages
 from upload_images.router import router as router_upload_images
 from users.router import router_auth, router_users
 
+# Инициализация Sentry для мониторинга ошибок
 sentry_sdk.init(
     dsn="https://3ee5fa27194a2fc50569bb9970a18ea3@o4506003606339584.ingest.sentry.io/4506003610992640",
-    traces_sample_rate=1.0,
-    profiles_sample_rate=1.0,
-)
-
+    traces_sample_rate=1.0, profiles_sample_rate=1.0)
 
 app = FastAPI(title="Бронирование Отелей", version="1.0", root_path="/api")
 
+# Подключение маршрутов FastAPI
 app.include_router(router_auth)
 app.include_router(router_users)
 app.include_router(router_hotels)
 app.include_router(router_bookings)
 app.include_router(router_pages)
 app.include_router(router_upload_images)
-
 
 # Подключение CORS, чтобы запросы к API могли приходить из браузера
 # 3000 - порт, на котором работает фронтенд на React.js
@@ -58,8 +56,6 @@ app.add_middleware(
     ],
 )
 
-
-
 # Подключение версионирования
 app = VersionedFastAPI(app, version_format="{major}", prefix_format="/api/v{major}")
 
@@ -72,20 +68,20 @@ admin.add_view(BookingsAdmin)
 
 app.mount("/static", StaticFiles(directory="static"), "static")
 
-# Подключение эндпоинта для отображения метрик для их дальнейшего сбора Прометеусом
+# Подключение эндпоинта для отображения метрик для  сбора метрик Prometheus
 instrumentator = Instrumentator(should_group_status_codes=False, excluded_handlers=[".*admin.*", "/metrics"])
 instrumentator.instrument(app).expose(app)
 
+
+# Функция, для инициализации клиента Redis
 @app.on_event("startup")
 def startup():
     redis = aioredis.from_url(
-        f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
-        encoding="utf8",
-        decode_responses=True,
-    )
+        f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}", encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="cache")
 
 
+# Middleware для замера времени обработки запросов
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     start_time = time.time()
@@ -96,5 +92,5 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 
-# if __name__ == "__main__":
-#     uvicorn.run(app, host="localhost", port=8000)
+if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=8000)

@@ -3,6 +3,7 @@ from sqladmin import ModelView
 from models import Bookings, Hotels, Rooms, Users
 
 
+# Интерфейс для модели Users.
 class UsersAdmin(ModelView, model=Users):
     column_list = [Users.id, Users.email, Users.booking]
     column_details_exclude_list = [Users.hashed_password]

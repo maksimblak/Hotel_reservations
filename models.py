@@ -6,12 +6,6 @@ from sqlalchemy.orm import relationship
 from database import Base
 
 
-class Sbooking(BaseModel):
-    room_id: int
-    date_from: date
-    date_to: date
-
-
 class Users(Base):
     __tablename__ = "users"
 
@@ -76,4 +70,3 @@ class Rooms(Base):
 
     def __str__(self):
         return f"Номер {self.name}"
-

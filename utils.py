@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
 
 
+# Функция для получения списка словарей с датами
 def get_month_days(date: datetime = datetime.today()):
     counter = datetime(date.year, date.month, datetime.today().day, tzinfo=date.tzinfo)
     date_list = []
-    for _ in range(365*2):
+    for _ in range(365 * 2):
         date_list.append(
             {"date": counter.date(), "date_formatted": counter.strftime("%Y-%m-%d")}
         )
@@ -12,8 +13,9 @@ def get_month_days(date: datetime = datetime.today()):
     return date_list
 
 
+# Функция для формирования числа с разделителем тысяч
 def format_number_thousand_separator(
-    number: int,
-    separator: str = " ",
+        number: int,
+        separator: str = " ",
 ):
     return f"{number:,}".replace(",", separator)

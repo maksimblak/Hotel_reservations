@@ -14,16 +14,19 @@ router = APIRouter(prefix="/pages", tags=["Фронтенд"])
 templates = Jinja2Templates(directory="templates")
 
 
+# Страница входа
 @router.get("/login", response_class=HTMLResponse)
 async def get_login_page(request: Request):
     return templates.TemplateResponse("auth/login.html", {"request": request})
 
 
+# Страница регистрации
 @router.get("/register", response_class=HTMLResponse)
 async def get_register_page(request: Request):
     return templates.TemplateResponse("auth/register.html", {"request": request})
 
 
+# Страница отелей
 @router.get("/hotels/{location}", response_class=HTMLResponse)
 async def get_hotels_page(
         request: Request,
@@ -52,6 +55,7 @@ async def get_hotels_page(
     )
 
 
+# Страница комнат
 @router.get("/hotels/{hotel_id}/rooms", response_class=HTMLResponse)
 async def get_rooms_page(
         request: Request,
@@ -78,6 +82,7 @@ async def get_rooms_page(
     )
 
 
+# Страница об успешном бронировании
 @router.post("/successful_booking", response_class=HTMLResponse)
 async def get_successful_booking_page(
         request: Request,
@@ -88,6 +93,7 @@ async def get_successful_booking_page(
     )
 
 
+# Страница для бронирований
 @router.get("/bookings", response_class=HTMLResponse)
 async def get_bookings_page(
         request: Request,

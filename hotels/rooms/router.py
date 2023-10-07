@@ -8,15 +8,14 @@ from hotels.rooms.schemas import SRoomInfo
 from hotels.router import router
 
 
+# Эндпоинт для получения комнат в отеле на заданный период
 @router.get("/{hotel_id}/rooms")
-# Этот эндпоинт можно и нужно кэшировать, но в курсе этого не сделано, чтобы
-# можно было проследить разницу в работе /rooms (без кэша) и /hotels (с кэшем).
 async def get_rooms_by_time(
-    hotel_id: int,
-    date_from: date = Query(..., description=f"Например, {datetime.now().date()}"),
-    date_to: date = Query(
-        ..., description=f"Например, {(datetime.now() + timedelta(days=14)).date()}"
-    ),
+        hotel_id: int,
+        date_from: date = Query(..., description=f"Например, {datetime.now().date()}"),
+        date_to: date = Query(
+            ..., description=f"Например, {(datetime.now() + timedelta(days=14)).date()}"
+        ),
 ) -> List[SRoomInfo]:
     rooms = await RoomDAO.find_all(hotel_id, date_from, date_to)
     return rooms
