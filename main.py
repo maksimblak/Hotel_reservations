@@ -24,9 +24,7 @@ from upload_images.router import router as router_upload_images
 from users.router import router_auth, router_users
 
 # Инициализация Sentry для мониторинга ошибок
-sentry_sdk.init(
-    dsn="https://3ee5fa27194a2fc50569bb9970a18ea3@o4506003606339584.ingest.sentry.io/4506003610992640",
-    traces_sample_rate=1.0, profiles_sample_rate=1.0)
+sentry_sdk.init(dsn=settings.SENTRY_DSN, traces_sample_rate=1.0, profiles_sample_rate=1.0)
 
 app = FastAPI(title="Бронирование Отелей", version="1.0", root_path="/api")
 
@@ -87,7 +85,6 @@ async def add_process_time_header(request: Request, call_next):
     start_time = time.time()
     response = await call_next(request)
     process_time = time.time() - start_time
-    # При подключении Prometheus + Grafana подобный лог не требуется
     logger.info("Request handling time", extra={"process_time": round(process_time, 4)})
     return response
 
